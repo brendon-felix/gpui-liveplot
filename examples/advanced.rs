@@ -7,13 +7,13 @@ use gpui::{
 };
 
 use gpui_liveplot::{
-    AxisConfig, Color, GpuiPlotView, LineStyle, MarkerShape, MarkerStyle, Plot, PlotLinkGroup,
-    PlotLinkOptions, PlotViewConfig, Range, Series, SeriesKind, Theme, View,
+    AxisConfig, Color, LineStyle, MarkerShape, MarkerStyle, Plot, PlotLinkGroup, PlotLinkOptions,
+    PlotView, PlotViewConfig, Range, Series, SeriesKind, Theme, View,
 };
 
 struct AdvancedDemo {
-    top: gpui::Entity<GpuiPlotView>,
-    bottom: gpui::Entity<GpuiPlotView>,
+    top: gpui::Entity<PlotView>,
+    bottom: gpui::Entity<PlotView>,
 }
 
 impl gpui::Render for AdvancedDemo {
@@ -34,8 +34,8 @@ impl gpui::Render for AdvancedDemo {
 fn build_views(
     cx: &mut gpui::App,
 ) -> (
-    gpui::Entity<GpuiPlotView>,
-    gpui::Entity<GpuiPlotView>,
+    gpui::Entity<PlotView>,
+    gpui::Entity<PlotView>,
     Series,
     Series,
 ) {
@@ -117,12 +117,10 @@ fn build_views(
     };
 
     let top = cx.new(|_| {
-        GpuiPlotView::with_config(top_plot, config.clone())
-            .with_link_group(link_group.clone(), options)
+        PlotView::with_config(top_plot, config.clone()).with_link_group(link_group.clone(), options)
     });
-    let bottom = cx.new(|_| {
-        GpuiPlotView::with_config(bottom_plot, config).with_link_group(link_group, options)
-    });
+    let bottom =
+        cx.new(|_| PlotView::with_config(bottom_plot, config).with_link_group(link_group, options));
 
     (top, bottom, stream_a, stream_b)
 }
@@ -130,8 +128,8 @@ fn build_views(
 fn spawn_updates(
     window: &mut gpui::Window,
     cx: &mut gpui::App,
-    top: gpui::Entity<GpuiPlotView>,
-    bottom: gpui::Entity<GpuiPlotView>,
+    top: gpui::Entity<PlotView>,
+    bottom: gpui::Entity<PlotView>,
     mut stream_a: Series,
     mut stream_b: Series,
 ) {

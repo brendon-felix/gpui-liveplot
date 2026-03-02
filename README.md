@@ -34,7 +34,7 @@ use gpui_liveplot::{Plot, Series, SeriesKind};
 
 ```rust
 use gpui::{AppContext, Application, Bounds, WindowBounds, WindowOptions, px, size};
-use gpui_liveplot::{AxisConfig, GpuiPlotView, Plot, Series, SeriesKind, Theme};
+use gpui_liveplot::{AxisConfig, Plot, PlotView, Series, SeriesKind, Theme};
 
 Application::new().run(|cx| {
     let options = WindowOptions {
@@ -60,7 +60,7 @@ Application::new().run(|cx| {
             .build();
         plot.add_series(&series);
 
-        cx.new(|_| GpuiPlotView::new(plot))
+        cx.new(|_| PlotView::new(plot))
     })
     .unwrap();
 });
@@ -94,7 +94,7 @@ become visible immediately.
 
 ## Multi-Plot Linking
 
-Use `PlotLinkGroup` and `PlotLinkOptions` to link multiple `GpuiPlotView` instances.
+Use `PlotLinkGroup` and `PlotLinkOptions` to link multiple `PlotView` instances.
 
 See `examples/advanced.rs` for a complete linked-streaming demo.
 

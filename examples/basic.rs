@@ -1,7 +1,7 @@
 use gpui::{AppContext, Application, Bounds, WindowBounds, WindowOptions, px, size};
 
 use gpui_liveplot::{
-    AxisConfig, Color, GpuiPlotView, LineStyle, Plot, PlotViewConfig, Series, SeriesKind, Theme,
+    AxisConfig, Color, LineStyle, Plot, PlotView, PlotViewConfig, Series, SeriesKind, Theme,
 };
 
 fn main() {
@@ -41,7 +41,7 @@ fn main() {
                 ..Default::default()
             };
 
-            let view = GpuiPlotView::with_config(plot, config);
+            let view = PlotView::with_config(plot, config);
             cx.new(|_| view)
         })
         .unwrap();

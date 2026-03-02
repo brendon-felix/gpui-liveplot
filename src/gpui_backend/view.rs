@@ -28,15 +28,19 @@ use super::state::{ClickState, DragMode, DragState, PinToggle, PlotUiState};
 ///
 /// This view handles pan/zoom/box-zoom, hover readouts, and pin interactions
 /// while delegating data management to the underlying [`Plot`].
-#[derive(Clone)]
-pub struct GpuiPlotView {
+#[derive(Debug, Clone)]
+pub struct PlotView {
     plot: Arc<RwLock<Plot>>,
     state: Arc<RwLock<PlotUiState>>,
     config: PlotViewConfig,
     link: Option<LinkBinding>,
 }
 
-impl GpuiPlotView {
+/// Deprecated alias for [`PlotView`].
+#[deprecated(note = "Renamed to PlotView; please use PlotView instead")]
+pub type GpuiPlotView = PlotView;
+
+impl PlotView {
     /// Create a new GPUI plot view for the given plot.
     ///
     /// Uses the default [`PlotViewConfig`].
@@ -450,7 +454,7 @@ impl GpuiPlotView {
     }
 }
 
-impl Render for GpuiPlotView {
+impl Render for PlotView {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let plot = Arc::clone(&self.plot);
         let state = Arc::clone(&self.state);
@@ -527,10 +531,10 @@ impl Render for GpuiPlotView {
     }
 }
 
-/// A handle for mutating a [`Plot`] held inside a `GpuiPlotView`.
+/// A handle for mutating a [`Plot`] held inside a [`PlotView`].
 ///
 /// The handle clones cheaply and can be moved into async tasks.
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct PlotHandle {
     plot: Arc<RwLock<Plot>>,
 }

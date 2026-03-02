@@ -24,7 +24,7 @@
 //! ```
 //!
 //! # GPUI integration
-//! Use [`gpui_backend::GpuiPlotView`] to render and interact with a plot inside a GPUI
+//! Use [`gpui_backend::PlotView`] to render and interact with a plot inside a GPUI
 //! window. See the `examples/` directory for complete runnable examples.
 
 #![forbid(unsafe_code)]
@@ -52,6 +52,8 @@ pub use series::{Series, SeriesId, SeriesKind};
 pub use style::Theme;
 pub use view::{Range, View, Viewport};
 
+#[allow(deprecated)]
 pub use gpui_backend::{
-    GpuiPlotView, LinkMemberId, PlotHandle, PlotLinkGroup, PlotLinkOptions, PlotViewConfig,
+    GpuiPlotView, LinkMemberId, PlotHandle, PlotLinkGroup, PlotLinkOptions, PlotView,
+    PlotViewConfig,
 };
