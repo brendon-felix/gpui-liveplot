@@ -36,10 +36,6 @@ pub struct PlotView {
     link: Option<LinkBinding>,
 }
 
-/// Deprecated alias for [`PlotView`].
-#[deprecated(note = "Renamed to PlotView; please use PlotView instead")]
-pub type GpuiPlotView = PlotView;
-
 impl PlotView {
     /// Create a new GPUI plot view for the given plot.
     ///

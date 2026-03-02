@@ -19,5 +19,4 @@ mod view;
 
 pub use config::PlotViewConfig;
 pub use link::{LinkMemberId, PlotLinkGroup, PlotLinkOptions};
-#[allow(deprecated)]
-pub use view::{GpuiPlotView, PlotHandle, PlotView};
+pub use view::{PlotHandle, PlotView};
