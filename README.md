@@ -24,6 +24,13 @@ Add this crate to your project:
 gpui-liveplot = "0.1"
 ```
 
+If your app uses `gpui-component`, enable theme integration:
+
+```toml
+[dependencies]
+gpui-liveplot = { version = "0.1", features = ["gpui_component_theme"] }
+```
+
 In Rust code, import it as `gpui_liveplot`:
 
 ```rust

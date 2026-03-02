@@ -7,7 +7,8 @@
 //! - Interactive pan, zoom, box zoom, hover readout, and pin annotations via GPUI.
 //!
 //! # Feature flags
-//! - None at the moment.
+//! - `gpui_component_theme`: when enabled, [`gpui_backend::PlotView`] will use the
+//!   current `gpui-component` global theme if it exists.
 //!
 //! # Quick start
 //! ```rust

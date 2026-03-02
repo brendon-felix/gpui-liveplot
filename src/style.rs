@@ -196,6 +196,27 @@ impl Theme {
             },
         }
     }
+
+    /// Build a plot theme from the current `gpui-component` theme.
+    ///
+    /// This is only available when the `gpui_component_theme` feature is enabled.
+    #[cfg(feature = "gpui_component_theme")]
+    pub fn from_gpui_component_theme(theme: &gpui_component::Theme) -> Self {
+        Self {
+            background: theme.background.into(),
+            axis: theme.foreground.into(),
+            grid_major: theme.border.opacity(0.9).into(),
+            grid_minor: theme.border.opacity(0.45).into(),
+            hover_bg: theme.popover.opacity(0.92).into(),
+            hover_border: theme.border.opacity(0.9).into(),
+            pin_bg: theme.popover.opacity(0.92).into(),
+            pin_border: theme.border.opacity(0.95).into(),
+            selection_fill: theme.selection.opacity(0.35).into(),
+            selection_border: theme.selection.opacity(0.9).into(),
+            legend_bg: theme.popover.opacity(0.9).into(),
+            legend_border: theme.border.opacity(0.8).into(),
+        }
+    }
 }
 
 impl Default for Theme {
