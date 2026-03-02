@@ -4,7 +4,7 @@ use std::time::{Duration, Instant};
 use gpui::prelude::*;
 use gpui::{
     MouseButton, MouseDownEvent, MouseMoveEvent, MouseUpEvent, Pixels, Point, ScrollWheelEvent,
-    Window, canvas, div, px,
+    StatefulInteractiveElement, Window, canvas, div, px,
 };
 
 use crate::geom::{Point as DataPoint, ScreenPoint, ScreenRect};
@@ -304,6 +304,29 @@ impl GpuiPlotView {
         cx.notify();
     }
 
+    fn on_hover_state_change(&mut self, hovered: bool, window: &Window, cx: &mut Context<Self>) {
+        if hovered {
+            return;
+        }
+
+        let cursor = screen_point(window.mouse_position());
+        let mut state = self.state.write().expect("plot state lock");
+        let still_inside = state.legend_hit(cursor).is_some()
+            || state.regions.hit_test(cursor) != HitRegion::Outside;
+        if still_inside {
+            return;
+        }
+
+        let changed = state.hover.take().is_some() || state.hover_target.take().is_some();
+        state.last_cursor = None;
+        drop(state);
+
+        self.publish_cursor_link(None);
+        if changed {
+            cx.notify();
+        }
+    }
+
     fn on_mouse_up(&mut self, ev: &MouseUpEvent, cx: &mut Context<Self>) {
         let pos = screen_point(ev.position);
         let mut state = self.state.write().expect("plot state lock");
@@ -434,8 +457,10 @@ impl Render for GpuiPlotView {
         let config = self.config.clone();
         let link = self.link.clone();
         let theme = plot.read().expect("plot lock").theme().clone();
+        let hover_region_id = Arc::as_ptr(&self.state) as usize;
 
         div()
+            .id(("gpui-plot-view", hover_region_id))
             .size_full()
             .bg(to_hsla(theme.background))
             .child(
@@ -468,6 +493,9 @@ impl Render for GpuiPlotView {
             )
             .on_mouse_move(cx.listener(|this, ev, _, cx| {
                 this.on_mouse_move(ev, cx);
+            }))
+            .on_hover(cx.listener(|this, hovered, window, cx| {
+                this.on_hover_state_change(*hovered, window, cx);
             }))
             .on_mouse_up(
                 MouseButton::Left,
