@@ -42,12 +42,14 @@ pub mod view;
 
 pub mod gpui_backend;
 
+pub use gpui::{Hsla, Rgba};
+
 pub use axis::{AxisConfig, AxisConfigBuilder, AxisFormatter, TickConfig};
 pub use datasource::AppendError;
 pub use geom::Point;
 pub use interaction::Pin;
 pub use plot::{Plot, PlotBuilder};
-pub use render::{Color, LineStyle, MarkerShape, MarkerStyle};
+pub use render::{LineStyle, MarkerShape, MarkerStyle};
 pub use series::{Series, SeriesId, SeriesKind};
 pub use style::Theme;
 pub use view::{Range, View, Viewport};

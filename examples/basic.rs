@@ -1,7 +1,7 @@
 use gpui::{AppContext, Application, Bounds, WindowBounds, WindowOptions, px, size};
 
 use gpui_liveplot::{
-    AxisConfig, Color, LineStyle, Plot, PlotView, PlotViewConfig, Series, SeriesKind, Theme,
+    AxisConfig, LineStyle, Plot, PlotView, PlotViewConfig, Rgba, Series, SeriesKind, Theme,
 };
 
 fn main() {
@@ -23,7 +23,12 @@ fn main() {
                     x.sin()
                 }),
                 SeriesKind::Line(LineStyle {
-                    color: Color::new(0.2, 0.75, 0.95, 1.0),
+                    color: Rgba {
+                        r: 0.2,
+                        g: 0.75,
+                        b: 0.95,
+                        a: 1.0,
+                    },
                     width: 2.0,
                 }),
             );

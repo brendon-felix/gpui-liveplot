@@ -7,8 +7,8 @@ use gpui::{
 };
 
 use gpui_liveplot::{
-    AxisConfig, Color, LineStyle, MarkerShape, MarkerStyle, Plot, PlotLinkGroup, PlotLinkOptions,
-    PlotView, PlotViewConfig, Range, Series, SeriesKind, Theme, View,
+    AxisConfig, LineStyle, MarkerShape, MarkerStyle, Plot, PlotLinkGroup, PlotLinkOptions,
+    PlotView, PlotViewConfig, Range, Rgba, Series, SeriesKind, Theme, View,
 };
 
 struct AdvancedDemo {
@@ -40,11 +40,21 @@ fn build_views(
     Series,
 ) {
     let mut stream_a = Series::line("stream-A").with_kind(SeriesKind::Line(LineStyle {
-        color: Color::new(0.2, 0.82, 0.95, 1.0),
+        color: Rgba {
+            r: 0.2,
+            g: 0.82,
+            b: 0.95,
+            a: 1.0,
+        },
         width: 2.0,
     }));
     let mut stream_b = Series::line("stream-B").with_kind(SeriesKind::Line(LineStyle {
-        color: Color::new(0.95, 0.64, 0.28, 1.0),
+        color: Rgba {
+            r: 0.95,
+            g: 0.64,
+            b: 0.28,
+            a: 1.0,
+        },
         width: 2.0,
     }));
 
@@ -62,7 +72,12 @@ fn build_views(
             gpui_liveplot::Point::new(x, y)
         }),
         SeriesKind::Scatter(MarkerStyle {
-            color: Color::new(0.95, 0.25, 0.55, 1.0),
+            color: Rgba {
+                r: 0.95,
+                g: 0.25,
+                b: 0.55,
+                a: 1.0,
+            },
             size: 5.0,
             shape: MarkerShape::Circle,
         }),
@@ -74,7 +89,12 @@ fn build_views(
         Range::new(0.0, 25_000.0),
         5_000,
         SeriesKind::Line(LineStyle {
-            color: Color::new(0.45, 0.45, 0.5, 0.8),
+            color: Rgba {
+                r: 0.45,
+                g: 0.45,
+                b: 0.5,
+                a: 0.8,
+            },
             width: 1.0,
         }),
     );

@@ -1,11 +1,11 @@
 use gpui::{
-    App, BorderStyle, Bounds, ContentMask, Corners, Edges, PathBuilder, Pixels, TextRun, Window,
-    font, point, px, quad,
+    App, BorderStyle, Bounds, ContentMask, Corners, Edges, Hsla, PathBuilder, Pixels, Rgba,
+    TextRun, Window, font, point, px, quad,
 };
 
 use crate::geom::{ScreenPoint, ScreenRect};
 use crate::render::{
-    Color, LineSegment, LineStyle, MarkerShape, MarkerStyle, RectStyle, RenderCommand, TextStyle,
+    LineSegment, LineStyle, MarkerShape, MarkerStyle, RectStyle, RenderCommand, TextStyle,
 };
 
 use super::frame::PlotFrame;
@@ -61,7 +61,7 @@ fn paint_lines(window: &mut Window, segments: &[LineSegment], style: LineStyle) 
         builder.line_to(point(px(segment.end.x), px(segment.end.y)));
     }
     if let Ok(path) = builder.build() {
-        window.paint_path(path, to_rgba(style.color));
+        window.paint_path(path, style.color);
     }
 }
 
@@ -82,9 +82,9 @@ fn paint_points(window: &mut Window, points: &[ScreenPoint], style: MarkerStyle)
                 window.paint_quad(quad(
                     bounds,
                     Corners::all(px(radius)),
-                    to_rgba(style.color),
+                    style.color,
                     Edges::all(px(0.0)),
-                    to_rgba(style.color),
+                    style.color,
                     BorderStyle::default(),
                 ));
             }
@@ -99,9 +99,9 @@ fn paint_points(window: &mut Window, points: &[ScreenPoint], style: MarkerStyle)
                 window.paint_quad(quad(
                     bounds,
                     Corners::all(px(0.0)),
-                    to_rgba(style.color),
+                    style.color,
                     Edges::all(px(0.0)),
-                    to_rgba(style.color),
+                    style.color,
                     BorderStyle::default(),
                 ));
             }
@@ -120,7 +120,7 @@ fn paint_points(window: &mut Window, points: &[ScreenPoint], style: MarkerStyle)
                 builder.line_to(v_end);
             }
             if let Ok(path) = builder.build() {
-                window.paint_path(path, to_rgba(style.color));
+                window.paint_path(path, style.color);
             }
         }
     }
@@ -131,9 +131,9 @@ fn paint_rect(window: &mut Window, rect: ScreenRect, style: RectStyle) {
     let quad = quad(
         bounds,
         Corners::all(px(0.0)),
-        to_rgba(style.fill),
+        style.fill,
         Edges::all(px(style.stroke_width)),
-        to_rgba(style.stroke),
+        style.stroke,
         BorderStyle::default(),
     );
     window.paint_quad(quad);
@@ -166,17 +166,8 @@ fn paint_text(
     let _ = shaped.paint(origin, line_height, window, cx);
 }
 
-fn to_rgba(color: Color) -> gpui::Rgba {
-    gpui::Rgba {
-        r: color.r,
-        g: color.g,
-        b: color.b,
-        a: color.a,
-    }
-}
-
-pub(crate) fn to_hsla(color: Color) -> gpui::Hsla {
-    gpui::Hsla::from(to_rgba(color))
+pub(crate) fn to_hsla(color: Rgba) -> Hsla {
+    Hsla::from(color)
 }
 
 fn to_bounds(rect: ScreenRect) -> Bounds<Pixels> {

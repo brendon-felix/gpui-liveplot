@@ -2,7 +2,7 @@
 //!
 //! Themes describe plot-level colors (background, grid, axes, overlays).
 
-use crate::render::Color;
+use gpui::Rgba;
 
 /// Visual theme for plot-level elements such as axes, grid, and overlays.
 ///
@@ -10,29 +10,29 @@ use crate::render::Color;
 #[derive(Debug, Clone, PartialEq)]
 pub struct Theme {
     /// Plot background color.
-    pub background: Color,
+    pub background: Rgba,
     /// Axis, tick, and label color.
-    pub axis: Color,
+    pub axis: Rgba,
     /// Major grid line color.
-    pub grid_major: Color,
+    pub grid_major: Rgba,
     /// Minor grid line color.
-    pub grid_minor: Color,
+    pub grid_minor: Rgba,
     /// Hover tooltip background color.
-    pub hover_bg: Color,
+    pub hover_bg: Rgba,
     /// Hover tooltip border color.
-    pub hover_border: Color,
+    pub hover_border: Rgba,
     /// Pin tooltip background color.
-    pub pin_bg: Color,
+    pub pin_bg: Rgba,
     /// Pin tooltip border color.
-    pub pin_border: Color,
+    pub pin_border: Rgba,
     /// Selection rectangle fill color.
-    pub selection_fill: Color,
+    pub selection_fill: Rgba,
     /// Selection rectangle border color.
-    pub selection_border: Color,
+    pub selection_border: Rgba,
     /// Legend background color.
-    pub legend_bg: Color,
+    pub legend_bg: Rgba,
     /// Legend border color.
-    pub legend_border: Color,
+    pub legend_border: Rgba,
 }
 
 impl Theme {
@@ -44,36 +44,156 @@ impl Theme {
     /// Create a light theme palette.
     pub fn light() -> Self {
         Self {
-            background: Color::new(1.0, 1.0, 1.0, 1.0),
-            axis: Color::new(0.2, 0.2, 0.2, 1.0),
-            grid_major: Color::new(0.86, 0.86, 0.86, 1.0),
-            grid_minor: Color::new(0.93, 0.93, 0.93, 1.0),
-            hover_bg: Color::new(1.0, 1.0, 1.0, 0.9),
-            hover_border: Color::new(0.2, 0.2, 0.2, 0.8),
-            pin_bg: Color::new(1.0, 1.0, 1.0, 0.92),
-            pin_border: Color::new(0.2, 0.2, 0.2, 0.8),
-            selection_fill: Color::new(0.1, 0.4, 0.9, 0.15),
-            selection_border: Color::new(0.1, 0.4, 0.9, 0.9),
-            legend_bg: Color::new(1.0, 1.0, 1.0, 0.85),
-            legend_border: Color::new(0.2, 0.2, 0.2, 0.6),
+            background: Rgba {
+                r: 1.0,
+                g: 1.0,
+                b: 1.0,
+                a: 1.0,
+            },
+            axis: Rgba {
+                r: 0.2,
+                g: 0.2,
+                b: 0.2,
+                a: 1.0,
+            },
+            grid_major: Rgba {
+                r: 0.86,
+                g: 0.86,
+                b: 0.86,
+                a: 1.0,
+            },
+            grid_minor: Rgba {
+                r: 0.93,
+                g: 0.93,
+                b: 0.93,
+                a: 1.0,
+            },
+            hover_bg: Rgba {
+                r: 1.0,
+                g: 1.0,
+                b: 1.0,
+                a: 0.9,
+            },
+            hover_border: Rgba {
+                r: 0.2,
+                g: 0.2,
+                b: 0.2,
+                a: 0.8,
+            },
+            pin_bg: Rgba {
+                r: 1.0,
+                g: 1.0,
+                b: 1.0,
+                a: 0.92,
+            },
+            pin_border: Rgba {
+                r: 0.2,
+                g: 0.2,
+                b: 0.2,
+                a: 0.8,
+            },
+            selection_fill: Rgba {
+                r: 0.1,
+                g: 0.4,
+                b: 0.9,
+                a: 0.15,
+            },
+            selection_border: Rgba {
+                r: 0.1,
+                g: 0.4,
+                b: 0.9,
+                a: 0.9,
+            },
+            legend_bg: Rgba {
+                r: 1.0,
+                g: 1.0,
+                b: 1.0,
+                a: 0.85,
+            },
+            legend_border: Rgba {
+                r: 0.2,
+                g: 0.2,
+                b: 0.2,
+                a: 0.6,
+            },
         }
     }
 
     /// Create a dark theme palette.
     pub fn dark() -> Self {
         Self {
-            background: Color::new(0.08, 0.08, 0.09, 1.0),
-            axis: Color::new(0.85, 0.85, 0.85, 1.0),
-            grid_major: Color::new(0.25, 0.25, 0.28, 1.0),
-            grid_minor: Color::new(0.18, 0.18, 0.2, 1.0),
-            hover_bg: Color::new(0.12, 0.12, 0.13, 0.92),
-            hover_border: Color::new(0.6, 0.6, 0.6, 0.8),
-            pin_bg: Color::new(0.12, 0.12, 0.13, 0.92),
-            pin_border: Color::new(0.6, 0.6, 0.6, 0.85),
-            selection_fill: Color::new(0.2, 0.5, 0.95, 0.18),
-            selection_border: Color::new(0.3, 0.6, 1.0, 0.9),
-            legend_bg: Color::new(0.12, 0.12, 0.13, 0.9),
-            legend_border: Color::new(0.5, 0.5, 0.5, 0.7),
+            background: Rgba {
+                r: 0.08,
+                g: 0.08,
+                b: 0.09,
+                a: 1.0,
+            },
+            axis: Rgba {
+                r: 0.85,
+                g: 0.85,
+                b: 0.85,
+                a: 1.0,
+            },
+            grid_major: Rgba {
+                r: 0.25,
+                g: 0.25,
+                b: 0.28,
+                a: 1.0,
+            },
+            grid_minor: Rgba {
+                r: 0.18,
+                g: 0.18,
+                b: 0.2,
+                a: 1.0,
+            },
+            hover_bg: Rgba {
+                r: 0.12,
+                g: 0.12,
+                b: 0.13,
+                a: 0.92,
+            },
+            hover_border: Rgba {
+                r: 0.6,
+                g: 0.6,
+                b: 0.6,
+                a: 0.8,
+            },
+            pin_bg: Rgba {
+                r: 0.12,
+                g: 0.12,
+                b: 0.13,
+                a: 0.92,
+            },
+            pin_border: Rgba {
+                r: 0.6,
+                g: 0.6,
+                b: 0.6,
+                a: 0.85,
+            },
+            selection_fill: Rgba {
+                r: 0.2,
+                g: 0.5,
+                b: 0.95,
+                a: 0.18,
+            },
+            selection_border: Rgba {
+                r: 0.3,
+                g: 0.6,
+                b: 1.0,
+                a: 0.9,
+            },
+            legend_bg: Rgba {
+                r: 0.12,
+                g: 0.12,
+                b: 0.13,
+                a: 0.9,
+            },
+            legend_border: Rgba {
+                r: 0.5,
+                g: 0.5,
+                b: 0.5,
+                a: 0.7,
+            },
         }
     }
 }

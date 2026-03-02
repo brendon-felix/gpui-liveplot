@@ -1,13 +1,13 @@
 use std::cmp::Ordering;
 
-use gpui::{Bounds, Pixels, Window};
+use gpui::{Bounds, Pixels, Rgba, Window};
 
 use crate::axis::{AxisConfig, AxisLayout, TextMeasurer};
 use crate::geom::{Point as DataPoint, ScreenPoint, ScreenRect};
 use crate::plot::Plot;
 use crate::render::{
-    Color, LineSegment, LineStyle, MarkerShape, MarkerStyle, RectStyle, RenderCacheKey,
-    RenderCommand, RenderList, TextStyle, build_line_segments, build_scatter_points,
+    LineSegment, LineStyle, MarkerShape, MarkerStyle, RectStyle, RenderCacheKey, RenderCommand,
+    RenderList, TextStyle, build_line_segments, build_scatter_points,
 };
 use crate::series::{Series, SeriesKind};
 use crate::style::Theme;
@@ -619,7 +619,12 @@ fn build_axes(
         render.push(RenderCommand::Rect {
             rect: plot_rect,
             style: RectStyle {
-                fill: Color::new(0.0, 0.0, 0.0, 0.0),
+                fill: Rgba {
+                    r: 0.0,
+                    g: 0.0,
+                    b: 0.0,
+                    a: 0.0,
+                },
                 stroke: theme.axis,
                 stroke_width: 1.0,
             },
@@ -1427,15 +1432,15 @@ fn axis_title_text(axis: &AxisConfig) -> Option<String> {
     }
 }
 
-fn series_color(series: &Series) -> Color {
+fn series_color(series: &Series) -> Rgba {
     match series.kind() {
         SeriesKind::Line(style) => style.color,
         SeriesKind::Scatter(style) => style.color,
     }
 }
 
-fn with_alpha(color: Color, alpha: f32) -> Color {
-    Color {
+fn with_alpha(color: Rgba, alpha: f32) -> Rgba {
+    Rgba {
         a: (color.a * alpha).clamp(0.0, 1.0),
         ..color
     }

@@ -1,4 +1,4 @@
-use crate::render::Color;
+use gpui::Rgba;
 
 pub(crate) const AXIS_PADDING: f32 = 6.0;
 pub(crate) const TICK_LENGTH_MAJOR: f32 = 6.0;
@@ -6,7 +6,12 @@ pub(crate) const TICK_LENGTH_MINOR: f32 = 3.0;
 pub(crate) const DOUBLE_CLICK_PIN_GRACE_MS: u64 = 1200;
 pub(crate) const PIN_RING_INNER_PAD: f32 = 4.0;
 pub(crate) const PIN_RING_OUTER_PAD: f32 = 8.0;
-pub(crate) const PIN_UNPIN_HIGHLIGHT: Color = Color::new(0.95, 0.25, 0.25, 1.0);
+pub(crate) const PIN_UNPIN_HIGHLIGHT: Rgba = Rgba {
+    r: 0.95,
+    g: 0.25,
+    b: 0.25,
+    a: 1.0,
+};
 pub(crate) const PIN_LABEL_OFFSET: f32 = 10.0;
 pub(crate) const MAX_PIN_LABELS: usize = 12;
 pub(crate) const MAX_PIN_LABEL_COVERAGE: f32 = 0.35;

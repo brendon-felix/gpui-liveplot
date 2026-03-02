@@ -6,33 +6,7 @@
 use crate::geom::{Point, ScreenPoint, ScreenRect};
 use crate::transform::Transform;
 use crate::view::Viewport;
-
-/// RGBA color in linear space.
-///
-/// All components are expected to be in the 0.0..=1.0 range.
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Color {
-    /// Red channel.
-    pub r: f32,
-    /// Green channel.
-    pub g: f32,
-    /// Blue channel.
-    pub b: f32,
-    /// Alpha channel.
-    pub a: f32,
-}
-
-impl Color {
-    /// Create a new color.
-    pub const fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
-        Self { r, g, b, a }
-    }
-
-    /// Opaque black.
-    pub const BLACK: Self = Self::new(0.0, 0.0, 0.0, 1.0);
-    /// Opaque white.
-    pub const WHITE: Self = Self::new(1.0, 1.0, 1.0, 1.0);
-}
+use gpui::Rgba;
 
 /// Line stroke styling.
 ///
@@ -40,7 +14,7 @@ impl Color {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct LineStyle {
     /// Stroke color.
-    pub color: Color,
+    pub color: Rgba,
     /// Stroke width in pixels.
     pub width: f32,
 }
@@ -48,7 +22,12 @@ pub struct LineStyle {
 impl Default for LineStyle {
     fn default() -> Self {
         Self {
-            color: Color::BLACK,
+            color: Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0,
+            },
             width: 1.0,
         }
     }
@@ -71,7 +50,7 @@ pub enum MarkerShape {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct MarkerStyle {
     /// Marker color.
-    pub color: Color,
+    pub color: Rgba,
     /// Marker size in pixels.
     pub size: f32,
     /// Marker shape.
@@ -81,7 +60,12 @@ pub struct MarkerStyle {
 impl Default for MarkerStyle {
     fn default() -> Self {
         Self {
-            color: Color::BLACK,
+            color: Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0,
+            },
             size: 4.0,
             shape: MarkerShape::Circle,
         }
@@ -92,9 +76,9 @@ impl Default for MarkerStyle {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub(crate) struct RectStyle {
     /// Fill color.
-    pub fill: Color,
+    pub fill: Rgba,
     /// Stroke color.
-    pub stroke: Color,
+    pub stroke: Rgba,
     /// Stroke width.
     pub stroke_width: f32,
 }
@@ -102,8 +86,18 @@ pub(crate) struct RectStyle {
 impl Default for RectStyle {
     fn default() -> Self {
         Self {
-            fill: Color::new(0.0, 0.0, 0.0, 0.0),
-            stroke: Color::BLACK,
+            fill: Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 0.0,
+            },
+            stroke: Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0,
+            },
             stroke_width: 1.0,
         }
     }
@@ -113,7 +107,7 @@ impl Default for RectStyle {
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct TextStyle {
     /// Text color.
-    pub color: Color,
+    pub color: Rgba,
     /// Font size in pixels.
     pub size: f32,
 }
@@ -121,7 +115,12 @@ pub(crate) struct TextStyle {
 impl Default for TextStyle {
     fn default() -> Self {
         Self {
-            color: Color::BLACK,
+            color: Rgba {
+                r: 0.0,
+                g: 0.0,
+                b: 0.0,
+                a: 1.0,
+            },
             size: 12.0,
         }
     }
