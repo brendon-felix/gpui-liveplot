@@ -585,8 +585,10 @@ fn build_axes(
     measurer: &GpuiTextMeasurer<'_>,
 ) {
     let theme = plot.theme();
-    let mut ticks_major = Vec::new();
-    let mut ticks_minor = Vec::new();
+    let mut x_ticks_major = Vec::new();
+    let mut x_ticks_minor = Vec::new();
+    let mut y_ticks_major = Vec::new();
+    let mut y_ticks_minor = Vec::new();
     let label_gap = 2.0_f32;
     let mut last_x_label_right = f32::NEG_INFINITY;
     let mut last_y_label_top = f32::INFINITY;
@@ -631,6 +633,7 @@ fn build_axes(
         });
     }
 
+    render.push(RenderCommand::ClipRect(x_axis_rect));
     for tick in &x_layout.ticks {
         if let Some(x) = transform
             .data_to_screen(DataPoint::new(tick.value, transform.viewport().y.min))
@@ -646,9 +649,9 @@ fn build_axes(
                 ScreenPoint::new(x, plot_rect.max.y + length),
             );
             if tick.is_major {
-                ticks_major.push(segment);
+                x_ticks_major.push(segment);
             } else if plot.x_axis().show_minor_grid() {
-                ticks_minor.push(segment);
+                x_ticks_minor.push(segment);
             }
 
             if tick.is_major && !tick.label.is_empty() {
@@ -682,7 +685,27 @@ fn build_axes(
             }
         }
     }
+    if !x_ticks_minor.is_empty() {
+        render.push(RenderCommand::LineSegments {
+            segments: x_ticks_minor,
+            style: LineStyle {
+                color: theme.axis,
+                width: 1.0,
+            },
+        });
+    }
+    if !x_ticks_major.is_empty() {
+        render.push(RenderCommand::LineSegments {
+            segments: x_ticks_major,
+            style: LineStyle {
+                color: theme.axis,
+                width: 1.0,
+            },
+        });
+    }
+    render.push(RenderCommand::ClipEnd);
 
+    render.push(RenderCommand::ClipRect(y_axis_rect));
     for tick in &y_layout.ticks {
         if let Some(y) = transform
             .data_to_screen(DataPoint::new(transform.viewport().x.min, tick.value))
@@ -698,9 +721,9 @@ fn build_axes(
                 ScreenPoint::new(plot_rect.min.x, y),
             );
             if tick.is_major {
-                ticks_major.push(segment);
+                y_ticks_major.push(segment);
             } else if plot.y_axis().show_minor_grid() {
-                ticks_minor.push(segment);
+                y_ticks_minor.push(segment);
             }
 
             if tick.is_major && !tick.label.is_empty() {
@@ -734,25 +757,25 @@ fn build_axes(
             }
         }
     }
-
-    if !ticks_minor.is_empty() {
+    if !y_ticks_minor.is_empty() {
         render.push(RenderCommand::LineSegments {
-            segments: ticks_minor,
+            segments: y_ticks_minor,
             style: LineStyle {
                 color: theme.axis,
                 width: 1.0,
             },
         });
     }
-    if !ticks_major.is_empty() {
+    if !y_ticks_major.is_empty() {
         render.push(RenderCommand::LineSegments {
-            segments: ticks_major,
+            segments: y_ticks_major,
             style: LineStyle {
                 color: theme.axis,
                 width: 1.0,
             },
         });
     }
+    render.push(RenderCommand::ClipEnd);
 }
 
 fn build_axis_titles(
