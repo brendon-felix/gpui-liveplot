@@ -656,14 +656,7 @@ fn build_axes(
 
             if tick.is_major && !tick.label.is_empty() {
                 let size = measurer.measure(&tick.label, plot.x_axis().label_size());
-                let pos = clamp_label_position(
-                    ScreenPoint::new(
-                        x - size.0 * 0.5,
-                        plot_rect.max.y + TICK_LENGTH_MAJOR + AXIS_PADDING,
-                    ),
-                    size,
-                    x_axis_rect,
-                );
+                let pos = x_tick_label_position(x, size, plot_rect);
                 let label_left = pos.x;
                 let label_right = pos.x + size.0;
                 let label_rect =
@@ -728,14 +721,7 @@ fn build_axes(
 
             if tick.is_major && !tick.label.is_empty() {
                 let size = measurer.measure(&tick.label, plot.y_axis().label_size());
-                let pos = clamp_label_position(
-                    ScreenPoint::new(
-                        plot_rect.min.x - TICK_LENGTH_MAJOR - AXIS_PADDING - size.0,
-                        y - size.1 * 0.5,
-                    ),
-                    size,
-                    y_axis_rect,
-                );
+                let pos = y_tick_label_position(y, size, plot_rect);
                 let label_top = pos.y;
                 let label_bottom = pos.y + size.1;
                 let label_rect =
@@ -834,6 +820,53 @@ fn clamp_label_position(pos: ScreenPoint, size: (f32, f32), rect: ScreenRect) ->
         pos.x.clamp(rect.min.x, max_x),
         pos.y.clamp(rect.min.y, max_y),
     )
+}
+
+fn x_tick_label_position(x: f32, size: (f32, f32), plot_rect: ScreenRect) -> ScreenPoint {
+    ScreenPoint::new(
+        x - size.0 * 0.5,
+        plot_rect.max.y + TICK_LENGTH_MAJOR + AXIS_PADDING,
+    )
+}
+
+fn y_tick_label_position(y: f32, size: (f32, f32), plot_rect: ScreenRect) -> ScreenPoint {
+    ScreenPoint::new(
+        plot_rect.min.x - TICK_LENGTH_MAJOR - AXIS_PADDING - size.0,
+        y - size.1 * 0.5,
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn x_tick_label_position_keeps_tick_center_anchor() {
+        let plot_rect = ScreenRect::new(
+            ScreenPoint::new(100.0, 20.0),
+            ScreenPoint::new(300.0, 180.0),
+        );
+        let size = (40.0, 12.0);
+
+        let pos = x_tick_label_position(92.0, size, plot_rect);
+
+        assert_eq!(pos.x, 72.0);
+        assert_eq!(pos.y, 192.0);
+    }
+
+    #[test]
+    fn y_tick_label_position_keeps_tick_center_anchor() {
+        let plot_rect = ScreenRect::new(
+            ScreenPoint::new(100.0, 20.0),
+            ScreenPoint::new(300.0, 180.0),
+        );
+        let size = (30.0, 10.0);
+
+        let pos = y_tick_label_position(16.0, size, plot_rect);
+
+        assert_eq!(pos.x, 58.0);
+        assert_eq!(pos.y, 11.0);
+    }
 }
 
 fn build_hover(
