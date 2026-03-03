@@ -6,15 +6,11 @@
 //! - Viewport-aware decimation keeps rendering near `O(width)` for smooth interaction.
 //! - Interactive pan, zoom, box zoom, hover readout, and pin annotations via GPUI.
 //!
-//! # Feature flags
-//! - `gpui_component_theme`: when enabled, [`gpui_backend::PlotView`] will use the
-//!   current `gpui-component` global theme if it exists.
-//!
 //! # Quick start
 //! ```rust
-//! use gpui_liveplot::{LineStyle, Plot, Series, SeriesKind, Theme};
+//! use gpui_liveplot::{LineStyle, Plot, Series, SeriesKind};
 //!
-//! let mut plot = Plot::builder().theme(Theme::dark()).build();
+//! let mut plot = Plot::builder().build();
 //! let series = Series::from_iter_y(
 //!     "sensor",
 //!     (0..1000).map(|i| (i as f64 * 0.01).sin()),
@@ -23,6 +19,11 @@
 //! plot.add_series(&series);
 //! plot.refresh_viewport(0.05, 1e-6);
 //! ```
+//!
+//! # Theming
+//! [`gpui_backend::PlotView`] automatically reads the active `gpui-component`
+//! theme via `cx.theme()` on every frame, so plot colors always match the rest
+//! of the application. No manual theme configuration is required.
 //!
 //! # GPUI integration
 //! Use [`gpui_backend::PlotView`] to render and interact with a plot inside a GPUI

@@ -16,7 +16,7 @@ categories = ["gui", "visualization"]
 path = "src/lib.rs"
 
 [features]
-default = []
+default = ["gpui_component_theme"]
 gpui_component_theme = ["dep:gpui-component"]
 
 [dependencies]

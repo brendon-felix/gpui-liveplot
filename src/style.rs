@@ -198,9 +198,6 @@ impl Theme {
     }
 
     /// Build a plot theme from the current `gpui-component` theme.
-    ///
-    /// This is only available when the `gpui_component_theme` feature is enabled.
-    #[cfg(feature = "gpui_component_theme")]
     pub fn from_gpui_component_theme(theme: &gpui_component::Theme) -> Self {
         Self {
             background: theme.background.into(),

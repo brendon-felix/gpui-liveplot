@@ -12,6 +12,7 @@ use crate::interaction::{
     HitRegion, pan_viewport, toggle_pin, zoom_factor_from_drag, zoom_to_rect, zoom_viewport,
 };
 use crate::plot::Plot;
+use crate::style::Theme;
 use crate::transform::Transform;
 use crate::view::{Range, Viewport};
 
@@ -456,11 +457,7 @@ impl Render for PlotView {
         let state = Arc::clone(&self.state);
         let config = self.config.clone();
         let link = self.link.clone();
-        let base_theme = plot.read().expect("plot lock").theme().clone();
-        #[cfg(feature = "gpui_component_theme")]
-        let theme = resolve_theme(base_theme, cx);
-        #[cfg(not(feature = "gpui_component_theme"))]
-        let theme = base_theme;
+        let theme = resolve_theme(cx);
         let hover_region_id = Arc::as_ptr(&self.state) as usize;
 
         div()
@@ -472,14 +469,10 @@ impl Render for PlotView {
                     move |bounds, window, _app| {
                         let mut plot = plot.write().expect("plot lock");
                         let mut state = state.write().expect("plot state lock");
-                        #[cfg(feature = "gpui_component_theme")]
-                        if let Some(theme) = resolve_gpui_component_theme(_app) {
-                            plot.set_theme(theme);
-                        }
                         if let Some(link) = &link {
                             apply_link_updates(link, &mut plot, &mut state);
                         }
-                        build_frame(&mut plot, &mut state, &config, bounds, window)
+                        build_frame(&mut plot, &mut state, &config, &theme, bounds, window)
                     },
                     move |_, frame, window, cx| {
                         paint_frame(&frame, window, cx);
@@ -535,10 +528,9 @@ impl Render for PlotView {
     }
 }
 
-#[cfg(feature = "gpui_component_theme")]
-fn resolve_gpui_component_theme(cx: &gpui::App) -> Option<crate::style::Theme> {
+fn resolve_gpui_component_theme(cx: &gpui::App) -> Option<Theme> {
     if cx.has_global::<gpui_component::Theme>() {
-        Some(crate::style::Theme::from_gpui_component_theme(
+        Some(Theme::from_gpui_component_theme(
             gpui_component::Theme::global(cx),
         ))
     } else {
@@ -546,9 +538,8 @@ fn resolve_gpui_component_theme(cx: &gpui::App) -> Option<crate::style::Theme> {
     }
 }
 
-#[cfg(feature = "gpui_component_theme")]
-fn resolve_theme(base: crate::style::Theme, cx: &gpui::App) -> crate::style::Theme {
-    resolve_gpui_component_theme(cx).unwrap_or(base)
+fn resolve_theme(cx: &gpui::App) -> Theme {
+    resolve_gpui_component_theme(cx).unwrap_or_else(Theme::default)
 }
 
 /// A handle for mutating a [`Plot`] held inside a [`PlotView`].

@@ -6,7 +6,6 @@
 use crate::axis::AxisConfig;
 use crate::interaction::Pin;
 use crate::series::Series;
-use crate::style::Theme;
 use crate::view::{Range, View, Viewport};
 
 /// Main plot widget container.
@@ -16,7 +15,6 @@ use crate::view::{Range, View, Viewport};
 /// interaction state.
 #[derive(Debug, Clone)]
 pub struct Plot {
-    theme: Theme,
     x_axis: AxisConfig,
     y_axis: AxisConfig,
     view: View,
@@ -32,7 +30,6 @@ impl Plot {
     /// Equivalent to `PlotBuilder::default().build()`.
     pub fn new() -> Self {
         Self {
-            theme: Theme::default(),
             x_axis: AxisConfig::default(),
             y_axis: AxisConfig::default(),
             view: View::default(),
@@ -46,16 +43,6 @@ impl Plot {
     /// Start building a plot with custom configuration.
     pub fn builder() -> PlotBuilder {
         PlotBuilder::default()
-    }
-
-    /// Access the current theme.
-    pub fn theme(&self) -> &Theme {
-        &self.theme
-    }
-
-    /// Set the plot theme.
-    pub fn set_theme(&mut self, theme: Theme) {
-        self.theme = theme;
     }
 
     /// Access the X axis configuration.
@@ -286,10 +273,9 @@ impl Default for Plot {
 
 /// Builder for configuring a plot before construction.
 ///
-/// The builder captures theme, axes, view mode, and any initial series.
+/// The builder captures axes, view mode, and any initial series.
 #[derive(Debug, Default)]
 pub struct PlotBuilder {
-    theme: Theme,
     x_axis: AxisConfig,
     y_axis: AxisConfig,
     view: View,
@@ -298,12 +284,6 @@ pub struct PlotBuilder {
 }
 
 impl PlotBuilder {
-    /// Set the theme used by the plot.
-    pub fn theme(mut self, theme: Theme) -> Self {
-        self.theme = theme;
-        self
-    }
-
     /// Set the X axis configuration.
     pub fn x_axis(mut self, axis: AxisConfig) -> Self {
         self.x_axis = axis;
@@ -353,7 +333,6 @@ impl PlotBuilder {
     /// Build the plot.
     pub fn build(self) -> Plot {
         Plot {
-            theme: self.theme,
             x_axis: self.x_axis,
             y_axis: self.y_axis,
             view: self.view,

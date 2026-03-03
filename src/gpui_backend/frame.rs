@@ -32,6 +32,7 @@ pub(crate) fn build_frame(
     plot: &mut Plot,
     state: &mut PlotUiState,
     config: &PlotViewConfig,
+    theme: &Theme,
     bounds: Bounds<Pixels>,
     window: &Window,
 ) -> PlotFrame {
@@ -120,14 +121,15 @@ pub(crate) fn build_frame(
         build_grid(
             &mut render,
             plot,
+            theme,
             &x_layout,
             &y_layout,
             &transform,
             plot_rect,
         );
         build_series(&mut render, plot, state, &transform, plot_rect);
-        build_linked_brush(&mut render, plot, state, &transform, plot_rect);
-        build_selection(&mut render, plot, state);
+        build_linked_brush(&mut render, theme, state, &transform, plot_rect);
+        build_selection(&mut render, theme, state);
         update_hover_target(
             plot,
             state,
@@ -136,11 +138,20 @@ pub(crate) fn build_frame(
             config.pin_threshold_px,
             config.unpin_threshold_px,
         );
-        build_linked_cursor(&mut render, plot, state, &transform, plot_rect, &measurer);
-        build_pins(&mut render, plot, &transform, plot_rect, &measurer);
+        build_linked_cursor(
+            &mut render,
+            plot,
+            theme,
+            state,
+            &transform,
+            plot_rect,
+            &measurer,
+        );
+        build_pins(&mut render, plot, theme, &transform, plot_rect, &measurer);
         build_axes(
             &mut render,
             plot,
+            theme,
             &x_layout,
             &y_layout,
             plot_rect,
@@ -150,16 +161,25 @@ pub(crate) fn build_frame(
             &measurer,
         );
         if config.show_hover {
-            build_hover(&mut render, plot, state, &transform, plot_rect, &measurer);
+            build_hover(
+                &mut render,
+                plot,
+                theme,
+                state,
+                &transform,
+                plot_rect,
+                &measurer,
+            );
         }
         if config.show_legend {
-            build_legend(&mut render, plot, state, plot_rect, &measurer);
+            build_legend(&mut render, plot, theme, state, plot_rect, &measurer);
         } else {
             state.legend_layout = None;
         }
         build_axis_titles(
             &mut render,
             plot,
+            theme,
             plot_rect,
             x_axis_rect,
             y_axis_rect,
@@ -177,7 +197,7 @@ pub(crate) fn build_frame(
             position: pos,
             text: message.to_string(),
             style: TextStyle {
-                color: plot.theme().axis,
+                color: theme.axis,
                 size: 14.0,
             },
         });
@@ -189,12 +209,12 @@ pub(crate) fn build_frame(
 fn build_grid(
     render: &mut RenderList,
     plot: &Plot,
+    theme: &Theme,
     x_layout: &AxisLayout,
     y_layout: &AxisLayout,
     transform: &Transform,
     plot_rect: ScreenRect,
 ) {
-    let theme = plot.theme();
     let mut major = Vec::new();
     let mut minor = Vec::new();
 
@@ -362,14 +382,14 @@ fn build_series(
     render.push(RenderCommand::ClipEnd);
 }
 
-fn build_selection(render: &mut RenderList, plot: &Plot, state: &PlotUiState) {
+fn build_selection(render: &mut RenderList, theme: &Theme, state: &PlotUiState) {
     if let Some(rect) = state.selection_rect {
         let rect = normalized_rect(rect);
         render.push(RenderCommand::Rect {
             rect,
             style: RectStyle {
-                fill: plot.theme().selection_fill,
-                stroke: plot.theme().selection_border,
+                fill: theme.selection_fill,
+                stroke: theme.selection_border,
                 stroke_width: 1.0,
             },
         });
@@ -379,6 +399,7 @@ fn build_selection(render: &mut RenderList, plot: &Plot, state: &PlotUiState) {
 fn build_pins(
     render: &mut RenderList,
     plot: &Plot,
+    theme: &Theme,
     transform: &Transform,
     plot_rect: ScreenRect,
     measurer: &GpuiTextMeasurer<'_>,
@@ -386,8 +407,6 @@ fn build_pins(
     if plot.pins().is_empty() {
         return;
     }
-
-    let theme = plot.theme();
     let font_size = 12.0;
     let line_height = 14.0;
     let mut labels: Vec<PinLabel> = Vec::new();
@@ -576,6 +595,7 @@ fn build_pins(
 fn build_axes(
     render: &mut RenderList,
     plot: &Plot,
+    theme: &Theme,
     x_layout: &AxisLayout,
     y_layout: &AxisLayout,
     plot_rect: ScreenRect,
@@ -584,7 +604,6 @@ fn build_axes(
     y_axis_rect: ScreenRect,
     measurer: &GpuiTextMeasurer<'_>,
 ) {
-    let theme = plot.theme();
     let mut x_ticks_major = Vec::new();
     let mut x_ticks_minor = Vec::new();
     let mut y_ticks_major = Vec::new();
@@ -767,12 +786,12 @@ fn build_axes(
 fn build_axis_titles(
     render: &mut RenderList,
     plot: &Plot,
+    theme: &Theme,
     plot_rect: ScreenRect,
     x_axis_rect: ScreenRect,
     y_axis_rect: ScreenRect,
     measurer: &GpuiTextMeasurer<'_>,
 ) {
-    let theme = plot.theme();
     if let Some(title) = axis_title_text(plot.x_axis()) {
         let size = measurer.measure(&title, plot.x_axis().label_size());
         let pos = clamp_label_position(
@@ -872,12 +891,12 @@ mod tests {
 fn build_hover(
     render: &mut RenderList,
     plot: &Plot,
+    theme: &Theme,
     state: &PlotUiState,
     transform: &Transform,
     plot_rect: ScreenRect,
     measurer: &GpuiTextMeasurer<'_>,
 ) {
-    let theme = plot.theme();
     let Some(cursor) = state.hover else { return };
     if cursor.x < plot_rect.min.x
         || cursor.x > plot_rect.max.x
@@ -1039,6 +1058,7 @@ fn build_hover(
 fn build_linked_cursor(
     render: &mut RenderList,
     plot: &Plot,
+    theme: &Theme,
     state: &PlotUiState,
     transform: &Transform,
     plot_rect: ScreenRect,
@@ -1061,8 +1081,6 @@ fn build_linked_cursor(
     if screen_x < plot_rect.min.x || screen_x > plot_rect.max.x {
         return;
     }
-
-    let theme = plot.theme();
 
     render.push(RenderCommand::ClipRect(plot_rect));
     render.push(RenderCommand::LineSegments {
@@ -1145,7 +1163,7 @@ fn build_linked_cursor(
 
 fn build_linked_brush(
     render: &mut RenderList,
-    plot: &Plot,
+    theme: &Theme,
     state: &PlotUiState,
     transform: &Transform,
     plot_rect: ScreenRect,
@@ -1176,7 +1194,6 @@ fn build_linked_brush(
         return;
     }
 
-    let theme = plot.theme();
     render.push(RenderCommand::ClipRect(plot_rect));
     render.push(RenderCommand::Rect {
         rect: ScreenRect::new(
@@ -1195,11 +1212,11 @@ fn build_linked_brush(
 fn build_legend(
     render: &mut RenderList,
     plot: &Plot,
+    theme: &Theme,
     state: &mut PlotUiState,
     plot_rect: ScreenRect,
     measurer: &GpuiTextMeasurer<'_>,
 ) {
-    let theme = plot.theme();
     let series_list = plot.series();
     if series_list.is_empty() {
         state.legend_layout = None;
