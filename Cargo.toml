@@ -20,5 +20,5 @@ default = ["gpui_component_theme"]
 gpui_component_theme = ["dep:gpui-component"]
 
 [dependencies]
-gpui = { git = "https://github.com/zed-industries/zed" }
-gpui-component = { git = "https://github.com/longbridge/gpui-component", version = "0.5.1", optional = true, default-features = false}
+gpui = { git = "https://github.com/zed-industries/zed", rev = "42ba961075b16aaf35d48631f0ce4e1a4196d983" }
+gpui-component = { git = "https://github.com/brendon-felix/gpui-component", optional = true, default-features = false }
