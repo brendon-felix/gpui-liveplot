@@ -421,7 +421,7 @@ impl PlotView {
 
         let line_height = px(16.0);
         let delta = ev.delta.pixel_delta(line_height);
-        let zoom_delta = -f32::from(delta.y);
+        let zoom_delta = f32::from(delta.y);
         if zoom_delta.abs() < 0.01 {
             return;
         }
